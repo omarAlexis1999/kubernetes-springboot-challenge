@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: purchase-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: purchase-challenge
+  template:
+    metadata:
+      labels:
+        app: purchase-challenge
+    spec:
+      containers:
+      - name: purchase-challenge
+        image: purchase-challenge:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8093
+        envFrom:
+        - configMapRef:
+            name: general-config
+        - secretRef:
+            name: general-secret

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conversion-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conversion-challenge
+  template:
+    metadata:
+      labels:
+        app: conversion-challenge
+    spec:
+      containers:
+      - name: conversion-challenge
+        image: conversion-challenge:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8092
+        envFrom:
+        - configMapRef:
+            name: general-config
+        - secretRef:    
+            name: general-secret

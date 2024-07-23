@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: report-challenge
+  template:
+    metadata:
+      labels:
+        app: report-challenge
+    spec:
+      containers:
+      - name: report-challenge
+        image: report-challenge:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8094
+        envFrom:
+        - configMapRef:
+            name: general-config
+        - secretRef:
+            name: general-secret

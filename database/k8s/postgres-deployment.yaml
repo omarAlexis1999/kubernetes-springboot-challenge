@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: general-config
+        - secretRef:
+            name: general-secret
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d/init-multi-postgres-databases.sh
+          subPath: init-multi-postgres-databases.sh
+      volumes:
+      - name: init-script
+        configMap:
+          name: init-script-configmap
+          items:
+          - key: init-multi-postgres-databases.sh
+            path: init-multi-postgres-databases.sh

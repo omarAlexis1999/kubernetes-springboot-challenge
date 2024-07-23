@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehicle-challenge
+  template:
+    metadata:
+      labels:
+        app: vehicle-challenge
+    spec:
+      containers:
+      - name: vehicle-challenge
+        image: vehicle-challenge:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8091
+        envFrom:
+        - configMapRef:
+            name: general-config
+        - secretRef:
+            name: general-secret
